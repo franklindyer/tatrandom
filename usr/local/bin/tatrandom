@@ -1,0 +1,29 @@
+CACHE_FILE="/var/cache/tatrandom/next.txt"
+
+TAT_RESULT=""
+if [ -f $CACHE_FILE ]; then
+   TAT_RESULT=$(cat $CACHE_FILE);
+   echo "" > $CACHE_FILE;
+fi
+
+echo $(curl https:/tatoeba.org/en/api_v0/search?sort=random 2> /dev/null | jq -r ".results[0]") > $CACHE_FILE &
+
+if [[ "$TAT_RESULT" == "" ]]; then
+   TAT_RESULT=$(curl https:/tatoeba.org/en/api_v0/search?sort=random 2> /dev/null | jq -r ".results[0]");
+fi
+
+# TAT_RESULT=$(curl https:/tatoeba.org/en/api_v0/search?sort=random 2> /dev/null | jq -r ".results[0]")
+
+MAIN_LANG=$(echo $TAT_RESULT | jq -r ".lang")
+MAIN_SENT=$(echo $TAT_RESULT | jq -r ".text")
+echo "($MAIN_LANG) $MAIN_SENT"
+
+echo "$TAT_RESULT" | jq -c ".translations[][0]" | while read -r TRANS; do
+   if [[ "$TRANS" != "null" ]]; then
+   	NEXT_LANG=$(echo $TRANS | jq -r ".lang");
+   	NEXT_SENT=$(echo $TRANS | jq -r ".text");
+   	echo "> ($NEXT_LANG) $NEXT_SENT";
+   fi
+done
+
+# echo $TAT_RESULT

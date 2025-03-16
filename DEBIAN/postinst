@@ -1,0 +1,4 @@
+mkdir -p /var/cache/tatrandom
+touch /var/cache/tatrandom/next.txt
+chmod 0666 /var/cache/tatrandom/next.txt
+echo $(curl https:/tatoeba.org/en/api_v0/search?sort=random 2> /dev/null | jq -r ".results[0]") > /var/cache/tatrandom/next.txt &

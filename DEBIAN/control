@@ -1,0 +1,8 @@
+Package: tatrandom
+Version: 1.0-1
+Section: base
+Priority: optional
+Architecture: arm64
+Depends: jq
+Maintainer: franklin+tatrandom@dyer.me
+Description: Get a random sentence from the Tatoeba API, and its translations.
